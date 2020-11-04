@@ -3,5 +3,16 @@ def addition(a, b):
     return int(a) + int(b)
 
 
-x, y = input().split()
-print(addition(x, y))
+while True:
+    inp = input()
+    if inp == '/exit':
+        print("Bye!")
+        break
+    elif inp != inp.strip():
+        continue
+    else:
+        x = list(map(int, inp.split()))
+        if len(x) == 1:
+            print(x[0])
+        if len(x) == 2:
+            print(addition(x[0], x[1]))

@@ -24,11 +24,23 @@ def determine_ints(array):
                 integers.append(s[1])
             elif array[j].endswith("+"):
                 return "Invalid expression"
+            elif array[j] in variables:
+                val = variables.get(array[j])
+                integers.append(int(val))
             else:
                 integers.append(int(array[j]))
         return integers
     except ValueError:
         return "Invalid expression"
+
+
+def single_identifier(var):
+    if not var[0].isalpha():
+        print("Invalid identifier")
+    elif var[0].isalpha() and var[0] not in variables:
+        print("Unknown variable")
+    elif var[0] in variables:
+        print(variables.get(var[0]))
 
 
 def calculate_expression(signs, integers):
@@ -44,6 +56,24 @@ def calculate_expression(signs, integers):
         return "Invalid expression"
 
 
+def declare_variable(input):
+    var = input.split('=', 1)
+    identifier = var[0].strip()
+    value = var[1].strip()
+    if not identifier.isalpha():
+        print('Invalid identifier')
+    elif identifier.isalpha() and value.isdigit():
+        variables.update({identifier: value})
+    elif identifier.isalpha() and value.isalpha() and (value not in variables):
+        print('Unknown variable')
+    elif identifier.isalpha() and value.isalpha() and (value in variables):
+        v = variables.get(value)
+        variables.update({identifier: v})
+    elif not value.isdigit():
+        print('Invalid assignment')
+
+
+variables = {}
 commands = ['/exit', '/help']
 while True:
     inp = input()
@@ -54,10 +84,14 @@ while True:
         break
     elif inp == '/help':
         print('The program excepts the expression, determines the sign in it (double minus becomes plus), and calculates the expression')
+    elif '=' in inp:
+        declare_variable(inp)
     else:
         x = list(map(str, inp.split()))
         if len(x) == 0:
             continue
+        elif len(x) == 1:
+            single_identifier(x)
         elif (len(determine_sign(x)) == 0) and (len(x) == 2):
             print("Invalid expression")
         else:
